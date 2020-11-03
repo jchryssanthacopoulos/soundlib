@@ -23,7 +23,7 @@ This saves a numpy file with the sound array data.
 
 ## Play Sound
 
-To play sound from a nunpy file, run
+To play sound from a numpy file, run
 
 ```
 python play.py <filename>
