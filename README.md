@@ -29,6 +29,8 @@ To play sound the file, run
 python play.py -i INPUT -s SAMPLE_RATE [--format {npy,wav}]
 ```
 
+The input can be either a single file or a directory containing several files. If a directory, the files are played sequentially.
+
 ## Examples
 
 ```

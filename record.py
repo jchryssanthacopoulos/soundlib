@@ -1,4 +1,4 @@
-# Record sound to numpy file."""
+# Record sound to file."""
 
 import argparse
 
