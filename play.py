@@ -1,27 +1,36 @@
 # Play sound from numpy file
 #
-# Usage is: python play.py <filename>
+# Usage is: python play.py <filename> <sample_rate>
 #
 # Examples:
-#   python.py play.py test.npy
+#   python.py play.py test.npy 8000
 #
 
-import sys
+import argparse
 
 import numpy as np
+from scipy.io import wavfile
 import sounddevice as sd
 
 
-SAMPLE_RATE = 44100
-
-
-def play(filename):
-    recording = np.load(filename)
-    sd.play(recording, SAMPLE_RATE)
+def play(filename, sample_rate, fmt):
+    if fmt == 'wav':
+        sample_rate, recording = wavfile.read(filename)
+    else:
+        recording = np.load(filename)
+    sd.play(recording, sample_rate)
     sd.wait()
 
 
 if __name__ == '__main__':
-    filename = sys.argv[1]
-    play(filename)
+    parser = argparse.ArgumentParser(description='Play sound')
+    parser.add_argument('-i', '--input', type=str, required=True,
+        help='Name of input file')
+    parser.add_argument('-s', '--sample-rate', type=int, required=True,
+        help='Sample rate in samples per second')
+    parser.add_argument('--format', choices=['npy', 'wav'], default='npy',
+        help='Format of input file')
+    arguments = parser.parse_args()
+
+    play(arguments.input, arguments.sample_rate, arguments.format)
  

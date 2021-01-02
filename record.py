@@ -1,32 +1,37 @@
-# Record sound to numpy file
-#
-# Usage is: python record.py <filename> [<duration>]
-#
-# Default duration is 5 seconds
-#
-# Examples:
-#   python.py record.py test.npy 5
-#   python.py record.py test.npy
-#
+# Record sound to numpy file."""
 
-import sys
+import argparse
 
 import numpy as np
+from scipy.io import wavfile
 import sounddevice as sd
 
 
-SAMPLE_RATE = 44100
-CHANNELS = 1 
+CHANNELS = 1
 
 
-def record(filename, duration): 
-    my_recording = sd.rec(int(duration * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=CHANNELS)
+def record(filename, duration, sample_rate, fmt): 
+    print("Recording...")
+    my_recording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=CHANNELS)
     sd.wait()
-    np.save(filename, my_recording)
+    if fmt == 'wav':
+        # save as wav file
+        wavfile.write(filename, sample_rate, my_recording)
+    else:
+        # save as npy file
+        np.save(filename, my_recording)
 
 
 if __name__ == '__main__':
-    filename = sys.argv[1]
-    duration = int(sys.argv[2]) if len(sys.argv) > 2 else 5
-    record(filename, duration)
- 
+    parser = argparse.ArgumentParser(description='Record sound')
+    parser.add_argument('-o', '--output', type=str, required=True,
+        help='Name of output file')
+    parser.add_argument('-d', '--duration', type=int, required=True,
+        help='Duration in seconds')
+    parser.add_argument('-s', '--sample-rate', type=int, required=True,
+        help='Sample rate in samples per second')
+    parser.add_argument('--format', choices=['npy', 'wav'], default='npy',
+        help='Format to save recording in')
+    arguments = parser.parse_args()
+
+    record(arguments.output, arguments.duration, arguments.sample_rate, arguments.format)
