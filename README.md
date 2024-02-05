@@ -23,7 +23,7 @@ This saves either a numpy or wav file, depending on the format chosen. The defau
 
 ## Play Sound
 
-To play sound the file, run
+To play the sound file, run
 
 ```
 python play.py -i INPUT -s SAMPLE_RATE [--format {npy,wav}]
